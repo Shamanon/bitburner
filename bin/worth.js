@@ -5,7 +5,7 @@ export async function main(ns) {
   if(args.all){
     for(let host of getServers(ns)){
       let value = ns.getServerMoneyAvailable(host);
-      if(value > 0) ns.tprint(host+': '+ns.nFormat(value, "$0.00a"));
+      if(value > 0) ns.tprint(host+': '+ns.formatNumber(value, "$0.00a"));
     }
   }else{
     const host = args._[0];

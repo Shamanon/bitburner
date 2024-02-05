@@ -6,9 +6,9 @@ export async function main(ns) {
 
   ns.disableLog("getServerMoneyAvailable");
   //ns.disableLog("sleep");
-  var desiredLevel = 100;
-  var desiredRam = 8;
-  var desiredCores = 2;
+  var desiredLevel = 200; // max 200
+  var desiredRam = 64; // max 64
+  var desiredCores = 16; // max 16
   var cnt = ns.hacknet.numNodes();
   var res;
   var cash = myMoney();

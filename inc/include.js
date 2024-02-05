@@ -63,12 +63,19 @@ export function serverCheck(ns, target) {
 
 // hack a server
 export function pwn(ns, target) {
-  const scripts = ['BruteSSH.exe', 'FTPCrack.exe', 'relaySMTP.exe', 'HTTPWorm.exe', 'SQLInject.exe', 'NUKE.exe'];
+  const func = {
+    'BruteSSH.exe' : ns.brutessh, 
+    'FTPCrack.exe' : ns.ftpcrack, 
+    'relaySMTP.exe' : ns.relaysmtp, 
+    'HTTPWorm.exe' : ns.httpworm, 
+    'SQLInject.exe' : ns.sqlinject, 
+    'NUKE.exe' : ns.nuke
+  }
   let i = 0;
-  for (let script of scripts) {
+  for (var script in func) {
     if (ns.fileExists(script)) {
       i++;
-      ns.this[script.toLowerCase().slice(0, -4)](target);
+      func[script](target);
     }
   }
   return i;
