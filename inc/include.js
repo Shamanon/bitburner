@@ -2,7 +2,7 @@
 
 // get list off all available servers
 export function getServers(ns, getAll = false) {
-  var skip = ['darkweb'];
+  var skip = ['darkweb','home'];
   var hosts = [];
 
   function serverOut(i) {
@@ -64,12 +64,12 @@ export function serverCheck(ns, target) {
 // hack a server
 export function pwn(ns, target) {
   const func = {
-    'BruteSSH.exe' : ns.brutessh, 
-    'FTPCrack.exe' : ns.ftpcrack, 
-    'relaySMTP.exe' : ns.relaysmtp, 
-    'HTTPWorm.exe' : ns.httpworm, 
-    'SQLInject.exe' : ns.sqlinject, 
-    'NUKE.exe' : ns.nuke
+    'BruteSSH.exe': ns.brutessh,
+    'FTPCrack.exe': ns.ftpcrack,
+    'relaySMTP.exe': ns.relaysmtp,
+    'HTTPWorm.exe': ns.httpworm,
+    'SQLInject.exe': ns.sqlinject,
+    'NUKE.exe': ns.nuke
   }
   let i = 0;
   for (var script in func) {
