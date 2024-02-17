@@ -6,8 +6,6 @@ export async function main(ns) {
 
   ns.alert("Backdooring servers. Do not leave the terminal until this script completes.");
 
-  await ns.sleep(5000);
-
   const scanned = getServers(ns, false);
 
   for (let i = 0; i < scanned.length; i++) {
@@ -41,7 +39,7 @@ export async function main(ns) {
             break;
           }
         }
-        await ns.sleep(2000);
+        await ns.sleep(500);
       }
 
       terminalInput.value = "home";

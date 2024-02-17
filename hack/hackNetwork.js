@@ -9,8 +9,8 @@ export async function main(ns) {
   const script = '/hack/hack.js';
   var script_args = [];
   var neededRam = ns.getScriptRam(script);
-  var earnableThreshold = 0;
-  var keepFree = 5;
+  var earnableThreshold = 1;
+  var keepFree = 20;
   if (arg.debug) ns.tail();
 
   if (arg.debug) ns.print('----PWNing servers---');
@@ -19,6 +19,7 @@ export async function main(ns) {
 
     var portTakers = numPorts(ns);
     var servers = getServers(ns, true); //returns list of all servers
+    servers.unshift('home');
     var pwnd = [];
     var earnable = [];
 
@@ -59,6 +60,9 @@ export async function main(ns) {
         hackMe.sort(function (a, b) { return a[0] - b[0]; }).reverse();
 
         let usableRAM = ns.getServerMaxRam(pwnd[i]) - ns.getServerUsedRam(pwnd[i]);
+
+        if (pwnd[i] == 'home' && usableRAM < keepFree) continue;
+
         if (pwnd[i] == 'home') usableRAM = usableRAM - keepFree;
 
         if (usableRAM < neededRam) continue;
@@ -87,7 +91,8 @@ export async function main(ns) {
           //get number of threads to use for this hack
           let myPercent = targetMax / totalCash;
           let myThreads = Math.floor(totalThreads * myPercent);
-          if (myThreads < 1) myThreads = 1;
+          if (myThreads < 1) continue;
+          //else if(myThreads < 1) myThreads = 1;
           //variables to send to hacking script
           script_args[0] = server;
           script_args[1] = targetMax;
@@ -96,7 +101,7 @@ export async function main(ns) {
           //hack server
           ns.exec(script, pwnd[i], myThreads, ...script_args);
           if (arg.debug) ns.print('Hacking ' + server + ' from ' + pwnd[i] + ' with ' + myThreads + ' threads.');
-          else ns.toast('Hacking ' + server + ' from ' + pwnd[i] + ' with ' + myThreads + ' threads.');
+          //else ns.toast('Hacking ' + server + ' from ' + pwnd[i] + ' with ' + myThreads + ' threads.');
         }
         //show info on hack
         if (myCount > 0) {
