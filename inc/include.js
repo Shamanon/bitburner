@@ -1,94 +1,90 @@
 /* custom hacking frunctions */
-
 // get list off all available servers
 export function getServers(ns, getAll = false) {
-  var skip = ['darkweb','home'];
-  var hosts = [];
-
-  function serverOut(i) {
-    for (let out of i) {
-      if (!skip.includes(out)) {
-        skip.push(out);
-        if (!hosts.includes(out)) hosts.push(out);
-        serverOut(ns.scan(out));
+    var skip = ['darkweb', 'home'];
+    var hosts = [];
+    function serverOut(i) {
+        for (let out of i) {
+            if (!skip.includes(out)) {
+                skip.push(out);
+                if (!hosts.includes(out))
+                    hosts.push(out);
+                serverOut(ns.scan(out));
+            }
+        }
+    }
+    for (let server of ns.scan(ns.getHostname())) {
+        if (server.includes("RAM") && !getAll)
+            skip.push(server);
+        if (!skip.includes(server)) {
+            hosts.push(server);
+            serverOut(ns.scan(server));
+        }
+    }
+    return hosts.sort();
+    /* potential code to try later
+    const foundServers = new Set([`home`]);
+    for (const server of foundServers){
+      if(server.includes("RAM") && !getAll) skip.push(server);
+      if(!skip.includes(server)){
+        ns.scan(server).forEach(adjacentServer => foundServers.add(adjacentServer));
       }
     }
-  }
-
-  for (let server of ns.scan(ns.getHostname())) {
-    if (server.includes("RAM") && !getAll) skip.push(server);
-    if (!skip.includes(server)) {
-      hosts.push(server);
-      serverOut(ns.scan(server));
-    }
-  }
-
-  return hosts.sort();
-  /* potential code to try later 
-  const foundServers = new Set([`home`]);
-  for (const server of foundServers){ 
-    if(server.includes("RAM") && !getAll) skip.push(server);
-    if(!skip.includes(server)){
-      ns.scan(server).forEach(adjacentServer => foundServers.add(adjacentServer));
-    }
-  }
-  return [...foundServers].sort();
-  // Only servers you own (`home` & all purchased servers)
-  const ownServers = getServers().filter(server => ns.getServer(server).purchasedByPlayer);
-  // Only servers you don't own
-  const otherServers = getServers().filter(server => !ns.getServer(server).purchasedByPlayer);
-
-  */
+    return [...foundServers].sort();
+    // Only servers you own (`home` & all purchased servers)
+    const ownServers = getServers().filter(server => ns.getServer(server).purchasedByPlayer);
+    // Only servers you don't own
+    const otherServers = getServers().filter(server => !ns.getServer(server).purchasedByPlayer);
+  
+    */
 }
-
 // print path to server
 export function getPath(ns, host) {
-  let path = [host];
-  while (path[0] !== "home") path.unshift(ns.scan(path[0])[0]);
-  return path.join("-->");
+    let path = [host];
+    while (path[0] !== "home")
+        path.unshift(ns.scan(path[0])[0]);
+    return path.join("-->");
 }
-
 // get server info
 export function serverCheck(ns, target) {
-  /* target */
-  var info = ns.getServer(target);
-  let maxRAM = ns.getServerMaxRam(target);
-  let isRooted = ns.hasRootAccess(target);
-  let reqHack = ns.getServerRequiredHackingLevel(target);
-  let minSec = ns.getServerMinSecurityLevel(target);
-  let maxMoney = ns.getServerMaxMoney(target);
-  let backdoor = info.backdoorInstalled;
-  return [target, maxRAM, isRooted, reqHack, minSec, maxMoney, backdoor];
+    /* target */
+    var info = ns.getServer(target);
+    let maxRAM = ns.getServerMaxRam(target);
+    let isRooted = ns.hasRootAccess(target);
+    let reqHack = ns.getServerRequiredHackingLevel(target);
+    let minSec = ns.getServerMinSecurityLevel(target);
+    let maxMoney = ns.getServerMaxMoney(target);
+    let backdoor = info.backdoorInstalled;
+    return [target, maxRAM, isRooted, reqHack, minSec, maxMoney, backdoor];
 }
-
 // hack a server
 export function pwn(ns, target) {
-  const func = {
-    'BruteSSH.exe': ns.brutessh,
-    'FTPCrack.exe': ns.ftpcrack,
-    'relaySMTP.exe': ns.relaysmtp,
-    'HTTPWorm.exe': ns.httpworm,
-    'SQLInject.exe': ns.sqlinject,
-    'NUKE.exe': ns.nuke
-  }
-  let i = 0;
-  for (var script in func) {
-    if (ns.fileExists(script)) {
-      i++;
-      func[script](target);
+    const func = {
+        'BruteSSH.exe': ns.brutessh,
+        'FTPCrack.exe': ns.ftpcrack,
+        'relaySMTP.exe': ns.relaysmtp,
+        'HTTPWorm.exe': ns.httpworm,
+        'SQLInject.exe': ns.sqlinject,
+        'NUKE.exe': ns.nuke
+    };
+    let i = 0;
+    for (var script in func) {
+        if (ns.fileExists(script)) {
+            i++;
+            func[script](target);
+        }
     }
-  }
-  return i;
+    return i;
 }
-
 // how many ports can I pwn?
 export function numPorts(ns) {
-  const scripts = ['BruteSSH.exe', 'FTPCrack.exe', 'relaySMTP.exe', 'HTTPWorm.exe', 'SQLInject.exe'];
-  let i = 0;
-  for (let script of scripts) {
-    if (ns.fileExists(script)) {
-      i++;
+    const scripts = ['BruteSSH.exe', 'FTPCrack.exe', 'relaySMTP.exe', 'HTTPWorm.exe', 'SQLInject.exe'];
+    let i = 0;
+    for (let script of scripts) {
+        if (ns.fileExists(script)) {
+            i++;
+        }
     }
-  }
-  return i;
+    return i;
 }
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5jbHVkZS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9pbmMvaW5jbHVkZS5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSwrQkFBK0I7QUFFL0IscUNBQXFDO0FBQ3JDLE1BQU0sVUFBVSxVQUFVLENBQUMsRUFBRSxFQUFFLE1BQU0sR0FBRyxLQUFLO0lBQzNDLElBQUksSUFBSSxHQUFHLENBQUMsU0FBUyxFQUFDLE1BQU0sQ0FBQyxDQUFDO0lBQzlCLElBQUksS0FBSyxHQUFHLEVBQUUsQ0FBQztJQUVmLFNBQVMsU0FBUyxDQUFDLENBQUM7UUFDbEIsS0FBSyxJQUFJLEdBQUcsSUFBSSxDQUFDLEVBQUU7WUFDakIsSUFBSSxDQUFDLElBQUksQ0FBQyxRQUFRLENBQUMsR0FBRyxDQUFDLEVBQUU7Z0JBQ3ZCLElBQUksQ0FBQyxJQUFJLENBQUMsR0FBRyxDQUFDLENBQUM7Z0JBQ2YsSUFBSSxDQUFDLEtBQUssQ0FBQyxRQUFRLENBQUMsR0FBRyxDQUFDO29CQUFFLEtBQUssQ0FBQyxJQUFJLENBQUMsR0FBRyxDQUFDLENBQUM7Z0JBQzFDLFNBQVMsQ0FBQyxFQUFFLENBQUMsSUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLENBQUM7YUFDekI7U0FDRjtJQUNILENBQUM7SUFFRCxLQUFLLElBQUksTUFBTSxJQUFJLEVBQUUsQ0FBQyxJQUFJLENBQUMsRUFBRSxDQUFDLFdBQVcsRUFBRSxDQUFDLEVBQUU7UUFDNUMsSUFBSSxNQUFNLENBQUMsUUFBUSxDQUFDLEtBQUssQ0FBQyxJQUFJLENBQUMsTUFBTTtZQUFFLElBQUksQ0FBQyxJQUFJLENBQUMsTUFBTSxDQUFDLENBQUM7UUFDekQsSUFBSSxDQUFDLElBQUksQ0FBQyxRQUFRLENBQUMsTUFBTSxDQUFDLEVBQUU7WUFDMUIsS0FBSyxDQUFDLElBQUksQ0FBQyxNQUFNLENBQUMsQ0FBQztZQUNuQixTQUFTLENBQUMsRUFBRSxDQUFDLElBQUksQ0FBQyxNQUFNLENBQUMsQ0FBQyxDQUFDO1NBQzVCO0tBQ0Y7SUFFRCxPQUFPLEtBQUssQ0FBQyxJQUFJLEVBQUUsQ0FBQztJQUNwQjs7Ozs7Ozs7Ozs7Ozs7TUFjRTtBQUNKLENBQUM7QUFFRCx1QkFBdUI7QUFDdkIsTUFBTSxVQUFVLE9BQU8sQ0FBQyxFQUFFLEVBQUUsSUFBSTtJQUM5QixJQUFJLElBQUksR0FBRyxDQUFDLElBQUksQ0FBQyxDQUFDO0lBQ2xCLE9BQU8sSUFBSSxDQUFDLENBQUMsQ0FBQyxLQUFLLE1BQU07UUFBRSxJQUFJLENBQUMsT0FBTyxDQUFDLEVBQUUsQ0FBQyxJQUFJLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQztJQUM3RCxPQUFPLElBQUksQ0FBQyxJQUFJLENBQUMsS0FBSyxDQUFDLENBQUM7QUFDMUIsQ0FBQztBQUVELGtCQUFrQjtBQUNsQixNQUFNLFVBQVUsV0FBVyxDQUFDLEVBQUUsRUFBRSxNQUFNO0lBQ3BDLFlBQVk7SUFDWixJQUFJLElBQUksR0FBRyxFQUFFLENBQUMsU0FBUyxDQUFDLE1BQU0sQ0FBQyxDQUFDO0lBQ2hDLElBQUksTUFBTSxHQUFHLEVBQUUsQ0FBQyxlQUFlLENBQUMsTUFBTSxDQUFDLENBQUM7SUFDeEMsSUFBSSxRQUFRLEdBQUcsRUFBRSxDQUFDLGFBQWEsQ0FBQyxNQUFNLENBQUMsQ0FBQztJQUN4QyxJQUFJLE9BQU8sR0FBRyxFQUFFLENBQUMsNkJBQTZCLENBQUMsTUFBTSxDQUFDLENBQUM7SUFDdkQsSUFBSSxNQUFNLEdBQUcsRUFBRSxDQUFDLHlCQUF5QixDQUFDLE1BQU0sQ0FBQyxDQUFDO0lBQ2xELElBQUksUUFBUSxHQUFHLEVBQUUsQ0FBQyxpQkFBaUIsQ0FBQyxNQUFNLENBQUMsQ0FBQztJQUM1QyxJQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsaUJBQWlCLENBQUM7SUFDdEMsT0FBTyxDQUFDLE1BQU0sRUFBRSxNQUFNLEVBQUUsUUFBUSxFQUFFLE9BQU8sRUFBRSxNQUFNLEVBQUUsUUFBUSxFQUFFLFFBQVEsQ0FBQyxDQUFDO0FBQ3pFLENBQUM7QUFFRCxnQkFBZ0I7QUFDaEIsTUFBTSxVQUFVLEdBQUcsQ0FBQyxFQUFFLEVBQUUsTUFBTTtJQUM1QixNQUFNLElBQUksR0FBRztRQUNYLGNBQWMsRUFBRSxFQUFFLENBQUMsUUFBUTtRQUMzQixjQUFjLEVBQUUsRUFBRSxDQUFDLFFBQVE7UUFDM0IsZUFBZSxFQUFFLEVBQUUsQ0FBQyxTQUFTO1FBQzdCLGNBQWMsRUFBRSxFQUFFLENBQUMsUUFBUTtRQUMzQixlQUFlLEVBQUUsRUFBRSxDQUFDLFNBQVM7UUFDN0IsVUFBVSxFQUFFLEVBQUUsQ0FBQyxJQUFJO0tBQ3BCLENBQUE7SUFDRCxJQUFJLENBQUMsR0FBRyxDQUFDLENBQUM7SUFDVixLQUFLLElBQUksTUFBTSxJQUFJLElBQUksRUFBRTtRQUN2QixJQUFJLEVBQUUsQ0FBQyxVQUFVLENBQUMsTUFBTSxDQUFDLEVBQUU7WUFDekIsQ0FBQyxFQUFFLENBQUM7WUFDSixJQUFJLENBQUMsTUFBTSxDQUFDLENBQUMsTUFBTSxDQUFDLENBQUM7U0FDdEI7S0FDRjtJQUNELE9BQU8sQ0FBQyxDQUFDO0FBQ1gsQ0FBQztBQUVELDRCQUE0QjtBQUM1QixNQUFNLFVBQVUsUUFBUSxDQUFDLEVBQUU7SUFDekIsTUFBTSxPQUFPLEdBQUcsQ0FBQyxjQUFjLEVBQUUsY0FBYyxFQUFFLGVBQWUsRUFBRSxjQUFjLEVBQUUsZUFBZSxDQUFDLENBQUM7SUFDbkcsSUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDO0lBQ1YsS0FBSyxJQUFJLE1BQU0sSUFBSSxPQUFPLEVBQUU7UUFDMUIsSUFBSSxFQUFFLENBQUMsVUFBVSxDQUFDLE1BQU0sQ0FBQyxFQUFFO1lBQ3pCLENBQUMsRUFBRSxDQUFDO1NBQ0w7S0FDRjtJQUNELE9BQU8sQ0FBQyxDQUFDO0FBQ1gsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbIi8qIGN1c3RvbSBoYWNraW5nIGZydW5jdGlvbnMgKi9cblxuLy8gZ2V0IGxpc3Qgb2ZmIGFsbCBhdmFpbGFibGUgc2VydmVyc1xuZXhwb3J0IGZ1bmN0aW9uIGdldFNlcnZlcnMobnMsIGdldEFsbCA9IGZhbHNlKSB7XG4gIHZhciBza2lwID0gWydkYXJrd2ViJywnaG9tZSddO1xuICB2YXIgaG9zdHMgPSBbXTtcblxuICBmdW5jdGlvbiBzZXJ2ZXJPdXQoaSkge1xuICAgIGZvciAobGV0IG91dCBvZiBpKSB7XG4gICAgICBpZiAoIXNraXAuaW5jbHVkZXMob3V0KSkge1xuICAgICAgICBza2lwLnB1c2gob3V0KTtcbiAgICAgICAgaWYgKCFob3N0cy5pbmNsdWRlcyhvdXQpKSBob3N0cy5wdXNoKG91dCk7XG4gICAgICAgIHNlcnZlck91dChucy5zY2FuKG91dCkpO1xuICAgICAgfVxuICAgIH1cbiAgfVxuXG4gIGZvciAobGV0IHNlcnZlciBvZiBucy5zY2FuKG5zLmdldEhvc3RuYW1lKCkpKSB7XG4gICAgaWYgKHNlcnZlci5pbmNsdWRlcyhcIlJBTVwiKSAmJiAhZ2V0QWxsKSBza2lwLnB1c2goc2VydmVyKTtcbiAgICBpZiAoIXNraXAuaW5jbHVkZXMoc2VydmVyKSkge1xuICAgICAgaG9zdHMucHVzaChzZXJ2ZXIpO1xuICAgICAgc2VydmVyT3V0KG5zLnNjYW4oc2VydmVyKSk7XG4gICAgfVxuICB9XG5cbiAgcmV0dXJuIGhvc3RzLnNvcnQoKTtcbiAgLyogcG90ZW50aWFsIGNvZGUgdG8gdHJ5IGxhdGVyIFxuICBjb25zdCBmb3VuZFNlcnZlcnMgPSBuZXcgU2V0KFtgaG9tZWBdKTtcbiAgZm9yIChjb25zdCBzZXJ2ZXIgb2YgZm91bmRTZXJ2ZXJzKXsgXG4gICAgaWYoc2VydmVyLmluY2x1ZGVzKFwiUkFNXCIpICYmICFnZXRBbGwpIHNraXAucHVzaChzZXJ2ZXIpO1xuICAgIGlmKCFza2lwLmluY2x1ZGVzKHNlcnZlcikpe1xuICAgICAgbnMuc2NhbihzZXJ2ZXIpLmZvckVhY2goYWRqYWNlbnRTZXJ2ZXIgPT4gZm91bmRTZXJ2ZXJzLmFkZChhZGphY2VudFNlcnZlcikpO1xuICAgIH1cbiAgfVxuICByZXR1cm4gWy4uLmZvdW5kU2VydmVyc10uc29ydCgpO1xuICAvLyBPbmx5IHNlcnZlcnMgeW91IG93biAoYGhvbWVgICYgYWxsIHB1cmNoYXNlZCBzZXJ2ZXJzKVxuICBjb25zdCBvd25TZXJ2ZXJzID0gZ2V0U2VydmVycygpLmZpbHRlcihzZXJ2ZXIgPT4gbnMuZ2V0U2VydmVyKHNlcnZlcikucHVyY2hhc2VkQnlQbGF5ZXIpO1xuICAvLyBPbmx5IHNlcnZlcnMgeW91IGRvbid0IG93blxuICBjb25zdCBvdGhlclNlcnZlcnMgPSBnZXRTZXJ2ZXJzKCkuZmlsdGVyKHNlcnZlciA9PiAhbnMuZ2V0U2VydmVyKHNlcnZlcikucHVyY2hhc2VkQnlQbGF5ZXIpO1xuXG4gICovXG59XG5cbi8vIHByaW50IHBhdGggdG8gc2VydmVyXG5leHBvcnQgZnVuY3Rpb24gZ2V0UGF0aChucywgaG9zdCkge1xuICBsZXQgcGF0aCA9IFtob3N0XTtcbiAgd2hpbGUgKHBhdGhbMF0gIT09IFwiaG9tZVwiKSBwYXRoLnVuc2hpZnQobnMuc2NhbihwYXRoWzBdKVswXSk7XG4gIHJldHVybiBwYXRoLmpvaW4oXCItLT5cIik7XG59XG5cbi8vIGdldCBzZXJ2ZXIgaW5mb1xuZXhwb3J0IGZ1bmN0aW9uIHNlcnZlckNoZWNrKG5zLCB0YXJnZXQpIHtcbiAgLyogdGFyZ2V0ICovXG4gIHZhciBpbmZvID0gbnMuZ2V0U2VydmVyKHRhcmdldCk7XG4gIGxldCBtYXhSQU0gPSBucy5nZXRTZXJ2ZXJNYXhSYW0odGFyZ2V0KTtcbiAgbGV0IGlzUm9vdGVkID0gbnMuaGFzUm9vdEFjY2Vzcyh0YXJnZXQpO1xuICBsZXQgcmVxSGFjayA9IG5zLmdldFNlcnZlclJlcXVpcmVkSGFja2luZ0xldmVsKHRhcmdldCk7XG4gIGxldCBtaW5TZWMgPSBucy5nZXRTZXJ2ZXJNaW5TZWN1cml0eUxldmVsKHRhcmdldCk7XG4gIGxldCBtYXhNb25leSA9IG5zLmdldFNlcnZlck1heE1vbmV5KHRhcmdldCk7XG4gIGxldCBiYWNrZG9vciA9IGluZm8uYmFja2Rvb3JJbnN0YWxsZWQ7XG4gIHJldHVybiBbdGFyZ2V0LCBtYXhSQU0sIGlzUm9vdGVkLCByZXFIYWNrLCBtaW5TZWMsIG1heE1vbmV5LCBiYWNrZG9vcl07XG59XG5cbi8vIGhhY2sgYSBzZXJ2ZXJcbmV4cG9ydCBmdW5jdGlvbiBwd24obnMsIHRhcmdldCkge1xuICBjb25zdCBmdW5jID0ge1xuICAgICdCcnV0ZVNTSC5leGUnOiBucy5icnV0ZXNzaCxcbiAgICAnRlRQQ3JhY2suZXhlJzogbnMuZnRwY3JhY2ssXG4gICAgJ3JlbGF5U01UUC5leGUnOiBucy5yZWxheXNtdHAsXG4gICAgJ0hUVFBXb3JtLmV4ZSc6IG5zLmh0dHB3b3JtLFxuICAgICdTUUxJbmplY3QuZXhlJzogbnMuc3FsaW5qZWN0LFxuICAgICdOVUtFLmV4ZSc6IG5zLm51a2VcbiAgfVxuICBsZXQgaSA9IDA7XG4gIGZvciAodmFyIHNjcmlwdCBpbiBmdW5jKSB7XG4gICAgaWYgKG5zLmZpbGVFeGlzdHMoc2NyaXB0KSkge1xuICAgICAgaSsrO1xuICAgICAgZnVuY1tzY3JpcHRdKHRhcmdldCk7XG4gICAgfVxuICB9XG4gIHJldHVybiBpO1xufVxuXG4vLyBob3cgbWFueSBwb3J0cyBjYW4gSSBwd24/XG5leHBvcnQgZnVuY3Rpb24gbnVtUG9ydHMobnMpIHtcbiAgY29uc3Qgc2NyaXB0cyA9IFsnQnJ1dGVTU0guZXhlJywgJ0ZUUENyYWNrLmV4ZScsICdyZWxheVNNVFAuZXhlJywgJ0hUVFBXb3JtLmV4ZScsICdTUUxJbmplY3QuZXhlJ107XG4gIGxldCBpID0gMDtcbiAgZm9yIChsZXQgc2NyaXB0IG9mIHNjcmlwdHMpIHtcbiAgICBpZiAobnMuZmlsZUV4aXN0cyhzY3JpcHQpKSB7XG4gICAgICBpKys7XG4gICAgfVxuICB9XG4gIHJldHVybiBpO1xufSJdfQ==

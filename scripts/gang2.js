@@ -20,8 +20,8 @@ export async function main(ns) {
           ns.gang.setMemberTask(member, 'Train Combat');
           await ns.sleep(5000);
           ns.gang.setMemberTask(member, 'Territory Warfare');
-        } else ns.gang.setMemberTask(member, 'Money Laundering');
-        if (info.hack > 1.5) {
+        } else ns.gang.setMemberTask(member, 'Human Trafficking');
+        if (info.strength > 1.5) {
           ns.gang.ascendMember(member);
           ns.print(member + " ascended!");
         }
@@ -36,7 +36,7 @@ export async function main(ns) {
           ns.gang.setTerritoryWarfare(false);
         }
 
-      } else if (info && info.hack > 2.5) {
+      } else if (info && info.strength > 2.5) {
         ns.gang.ascendMember(member);
         ns.print(member + " ascended!");
       }
@@ -49,15 +49,16 @@ export async function main(ns) {
           continue;
       }
       if (myGang.length < 12) {
-        let hlevel = stats.hack;
-        if (hlevel > 1000) {
-          ns.gang.setMemberTask(member, 'Money Laundering');
-        } else if (hlevel > 125) {
-          ns.gang.setMemberTask(member, 'Plant Virus');
-        } else if (hlevel > 50) {
-          ns.gang.setMemberTask(member, 'Ethical Hacking');
+        let hlevel = stats.str;
+        if (hlevel > 2000) {
+          ns.gang.setMemberTask(member, 'Human Trafficking');
+        } else if (hlevel > 1000) {
+          ns.gang.setMemberTask(member, 'Run a Con');
+        } else if (hlevel > 15) {
+          ns.gang.setMemberTask(member, 'Mug People');
         } else ns.gang.setMemberTask(member, 'Territory Warfare');
       }
+      if(us.wantedPenalty > 5) ns.gang.setMemberTask(member, 'Vigilante Justice');
     }
     //ns.exit();
     await ns.sleep(1000);

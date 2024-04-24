@@ -1,8 +1,9 @@
 /** @param {NS} ns */
 //Install scripts for playing bitburner
 export async function main(ns) {
-	await ns.wget("https://raw.githubusercontent.com/5p0ng3b0b/bitburner-scripts/main/autoinfiltrate.js", "autoinfiltrate.js");
-	await ns.wget("https://raw.githubusercontent.com/5p0ng3b0b/bitburner-scripts/main/devmenu.js", "devmenu.js");
-	await ns.wget("https://raw.githubusercontent.com/alainbryden/bitburner-scripts/main/git-pull.js", "git-pull.js");
-  ns.exec("git-pull.js", "home");
+    await ns.wget("https://raw.githubusercontent.com/5p0ng3b0b/bitburner-scripts/main/autoinfiltrate.js", "autoinfiltrate.js");
+    await ns.wget("https://raw.githubusercontent.com/5p0ng3b0b/bitburner-scripts/main/devmenu.js", "devmenu.js");
+    await ns.wget("https://raw.githubusercontent.com/alainbryden/bitburner-scripts/main/git-pull.js", "git-pull.js");
+    ns.exec("git-pull.js", "home");
 }
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ2V0c3R1ZmYuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zcmMvZXh0L2dldHN0dWZmLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLHFCQUFxQjtBQUNyQix1Q0FBdUM7QUFDdkMsTUFBTSxDQUFDLEtBQUssVUFBVSxJQUFJLENBQUMsRUFBRTtJQUM1QixNQUFNLEVBQUUsQ0FBQyxJQUFJLENBQUMsc0ZBQXNGLEVBQUUsbUJBQW1CLENBQUMsQ0FBQztJQUMzSCxNQUFNLEVBQUUsQ0FBQyxJQUFJLENBQUMsK0VBQStFLEVBQUUsWUFBWSxDQUFDLENBQUM7SUFDN0csTUFBTSxFQUFFLENBQUMsSUFBSSxDQUFDLGtGQUFrRixFQUFFLGFBQWEsQ0FBQyxDQUFDO0lBQ2hILEVBQUUsQ0FBQyxJQUFJLENBQUMsYUFBYSxFQUFFLE1BQU0sQ0FBQyxDQUFDO0FBQ2pDLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyIvKiogQHBhcmFtIHtOU30gbnMgKi9cbi8vSW5zdGFsbCBzY3JpcHRzIGZvciBwbGF5aW5nIGJpdGJ1cm5lclxuZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIG1haW4obnMpIHtcblx0YXdhaXQgbnMud2dldChcImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS81cDBuZzNiMGIvYml0YnVybmVyLXNjcmlwdHMvbWFpbi9hdXRvaW5maWx0cmF0ZS5qc1wiLCBcImF1dG9pbmZpbHRyYXRlLmpzXCIpO1xuXHRhd2FpdCBucy53Z2V0KFwiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tLzVwMG5nM2IwYi9iaXRidXJuZXItc2NyaXB0cy9tYWluL2Rldm1lbnUuanNcIiwgXCJkZXZtZW51LmpzXCIpO1xuXHRhd2FpdCBucy53Z2V0KFwiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2FsYWluYnJ5ZGVuL2JpdGJ1cm5lci1zY3JpcHRzL21haW4vZ2l0LXB1bGwuanNcIiwgXCJnaXQtcHVsbC5qc1wiKTtcbiAgbnMuZXhlYyhcImdpdC1wdWxsLmpzXCIsIFwiaG9tZVwiKTtcbn0iXX0=
